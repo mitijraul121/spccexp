@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>intermediate code generator</title>
+</head>
+<body>
+    <pre>
+        #include&lt;stdio.h&gt;
+        #include&lt;string.h&gt;
+   
+        int i=1,j=0,tmpch=90;
+        char str[100],left[15],right[15];
+        
+        void findopr();
+        void explore();
+        void fleft(int);
+        void fright(int);
+        
+        struct exp
+        {
+            int pos;
+            char op;
+        }k[15];
+        
+        int main()
+        {
+            printf("Enter the Expression: ");
+            scanf("%s",str);
+            printf("The intermediate code:\n");
+            findopr();
+            explore();
+            return 0;
+        }
+        
+        void findopr()
+        {
+            for(i=0;str[i]!='\0';i++)
+            {
+                if(str[i]=='/' || str[i]=='*' || str[i]=='+' || str[i]=='-')
+                {
+                    k[j].pos=i;
+                    k[j++].op=str[i];
+                }
+            }
+        }
+        
+        void explore()
+        {
+            i=0;
+            while(i < j)
+            {
+                fleft(k[i].pos);
+                fright(k[i].pos);
+                str[k[i].pos]=tmpch--;
+                printf("\t%c = %s %c %s\n",str[k[i].pos],left,k[i].op,right);
+                i++;
+            }
+            
+            fleft(1);
+            fright(1);
+            printf("\t%s = %s\n", left, right);
+        }
+        
+        void fleft(int x)
+        {
+            x--;
+            char temp[20];
+            strcpy(left,"");
+            while(str[x]!= '+' &&str[x]!='-'&&str[x]!='*'&&str[x]!='/'&&str[x]!='='&&str[x]!='\0')
+            {
+                if(str[x]!='$')
+                {
+                    strcpy(temp, left);
+                    strcpy(left,"");
+                    strncat(left, &str[x], 1);
+                    strcat(left, temp);
+                    str[x]='$';
+                }
+                x--;
+            }
+        }
+        
+        void fright(int x)
+        {
+          x++;
+          strcpy(right,"");
+          while(str[x]!= '+'&&str[x]!='-'&&str[x]!='*'&&str[x]!='/'&&str[x]!='\0'&&str[x]!='=')
+          {
+            if(str[x]!='$')
+            {
+                strncat(right, &str[x], 1);
+                  str[x]='$';
+            }
+            x++;
+          }
+        }
+        
+        Input:
+        Enter the Expression: c=a+b/d
+        
+        Output:
+        The intermediate code:
+                Z = a + b
+                Y = Z / d
+                c = Y
+            </pre>
+</body>
+</html>
